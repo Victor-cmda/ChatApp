@@ -22,8 +22,29 @@ namespace ChatApp.API.Hubs
 
         public async Task Conectar(string username)
         {
-            var connection = new UserConnection(Context.ConnectionId, username);
-            await _chatRoom.Ask<Done>(connection);
+            try
+            {
+                var connection = new UserConnection(Context.ConnectionId, username);
+                var mensagensHistorico = await _chatRoom.Ask<IEnumerable<ChatMessage>>(connection);
+
+                foreach (var mensagem in mensagensHistorico)
+                {
+                    await Clients.Caller.SendAsync("ReceberMensagem", mensagem);
+                }
+
+                await Clients.Caller.SendAsync("ConexaoEstabelecida");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        public async Task<IEnumerable<ChatMessage>> BuscarHistorico()
+        {
+            var history = await _chatRoom.Ask<ChatHistory>(new GetChatHistory());
+            return history.Messages;
         }
     }
 }

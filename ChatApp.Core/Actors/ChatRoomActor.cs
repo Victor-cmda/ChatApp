@@ -1,4 +1,5 @@
-﻿using Akka.Actor;
+﻿using Akka;
+using Akka.Actor;
 using ChatApp.Domain.Models;
 
 namespace ChatApp.Core.Actors
@@ -15,6 +16,7 @@ namespace ChatApp.Core.Actors
 
             Receive<ChatMessage>(HandleMessage);
             Receive<UserConnection>(HandleUserConnection);
+            Receive<GetChatHistory>(HandleGetChatHistory);
         }
 
         private void HandleMessage(ChatMessage message)
@@ -24,15 +26,20 @@ namespace ChatApp.Core.Actors
             {
                 participante.Tell(message);
             }
+
+            Sender.Tell(Done.Instance);
+
         }
 
         private void HandleUserConnection(UserConnection connection)
         {
             _participantes.Add(Sender);
-            foreach (var msg in _historicoMensagens)
-            {
-                Sender.Tell(msg);
-            }
+            Sender.Tell(_historicoMensagens);
+        }
+
+        private void HandleGetChatHistory(GetChatHistory request)
+        {
+            Sender.Tell(new ChatHistory(_historicoMensagens));
         }
     }
 }

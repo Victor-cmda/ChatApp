@@ -1,0 +1,21 @@
+.ant-layout {
+    background: #fff !important;
+  }
+  
+  .message-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .message-list::-webkit-scrollbar-track {
+    background: #f0f0f0;
+  }
+  
+  .message-list::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 3px;
+  }
+  
+  .message-list::-webkit-scrollbar-thumb:hover {
+    background: #bfbfbf;
+  }
+  

@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { Layout } from "antd";
+import { ChatProvider } from "./contexts/ChatContext";
+import { LoginForm } from "./components/Login/LoginForm";
+import { ChatWindow } from "./components/Chat/ChatWindow";
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const { Content } = Layout;
+
+const App: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <ChatProvider>
+      <Layout style={{ height: "100vh" }}>
+        <Content style={{ padding: "24px" }}>
+          {!isLoggedIn ? (
+            <LoginForm onLoginSuccess={() => setIsLoggedIn(true)} />
+          ) : (
+            <ChatWindow />
+          )}
+        </Content>
+      </Layout>
+    </ChatProvider>
+  );
+};
 
-export default App
+export default App;
